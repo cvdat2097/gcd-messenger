@@ -7,7 +7,7 @@ export default class Profile extends React.Component {
             <div id="profile">
                 <div className="wrap">
                     <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" className="online" alt="" />
-                    <p>Mike Ross</p>
+                    <p>{this.props.username}</p>
                     <i className="fa fa-chevron-down expand-button" aria-hidden="true"></i>
                     <div id="status-options">
                         <ul>
@@ -24,14 +24,6 @@ export default class Profile extends React.Component {
                                 <p>Offline</p>
                             </li>
                         </ul>
-                    </div>
-                    <div id="expanded">
-                        <label htmlFor="twitter"><i className="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
-                        <input name="twitter" type="text" value="mikeross" />
-                        <label htmlFor="twitter"><i className="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
-                        <input name="twitter" type="text" value="ross81" />
-                        <label htmlFor="twitter"><i className="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
-                        <input name="twitter" type="text" value="mike.ross" />
                     </div>
                 </div>
             </div>

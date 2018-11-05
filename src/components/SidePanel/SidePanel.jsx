@@ -10,10 +10,10 @@ export default class SidePanel extends React.Component {
     render() {
         return (
             <div id="sidepanel">
-                <Profile />
+                <Profile username={this.props.username}/>
                 <SearchBar />
                 <ActiveUsers />
-                <BottomBar />
+                <BottomBar onChangeUsername={this.props.onChangeUsername}/>
             </div>
         );
     }
