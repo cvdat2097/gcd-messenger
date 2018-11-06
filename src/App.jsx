@@ -40,7 +40,7 @@ class App extends Component {
       MockDB.webSocket.next({
         action: MockDB.CONSTANTS.NEW_USR
       });
-    }, 5000);
+    }, 3000);
   }
 
   handleChangeUsername() {

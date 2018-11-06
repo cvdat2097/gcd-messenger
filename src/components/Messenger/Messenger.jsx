@@ -46,8 +46,8 @@ export default class Messenger extends React.Component {
         this.scrollToBottom();
     }
 
-    componentDidUpdate() {
-        if (!this.scrollLock) {
+    componentWillReceiveProps(newProps) {
+        if (!this.scrollLock && newProps.messages.length !== this.props.messages.length) {
             this.scrollToBottom();
         }
     }
