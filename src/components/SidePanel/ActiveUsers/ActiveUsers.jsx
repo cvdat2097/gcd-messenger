@@ -1,7 +1,7 @@
 import React from 'react';
 import './ActiveUsers.css';
 
-import { Users } from '../../../model/mockDB';
+import ContactBox from './ContactBox/ContactBox';
 
 export default class ActiveUsers extends React.Component {
 
@@ -10,20 +10,12 @@ export default class ActiveUsers extends React.Component {
 
         users.forEach((user, index) => {
             result.push(
-                <li
+                <ContactBox 
                     key={index}
-                    className="contact">
-                    <div className="wrap">
-                        <span className="contact-status online"></span>
-                        <img src={user.avatar} alt={user.username} />
-                        <div className="meta">
-                            <p className="name">{user.username}</p>
-                            <p className="preview">Recent message here</p>
-                        </div>
-                    </div>
-                </li>
+                    username={user.username}
+                    avatar={user.avatar}
+                />
             );
-
         });
 
         return result;
@@ -34,10 +26,9 @@ export default class ActiveUsers extends React.Component {
             <div id="contacts">
                 {/* contact-status online busy away */}
                 <ul>
-                    {this.generateContacts(Users)}
+                    {this.generateContacts(this.props.activeUsers)}
                 </ul>
             </div>
-
         );
     }
 }

@@ -26,13 +26,12 @@ export default class Messenger extends React.Component {
     }
 
     fetchMoreMessages() {
-        console.log('Change to loading...')
         this.scrollLock = true;
         this.setState({
             loadingText: 'Loading...',
         });
 
-        let fetcher = new Promise((resolve, reject) => {
+        new Promise((resolve, reject) => {
             this.props.fetchMoreMessages(resolve);
         }).then(() => {
             // TODO: Fetch more message
@@ -74,14 +73,14 @@ export default class Messenger extends React.Component {
         return (
             <div className="content">
                 <div className="messages">
-                    <a style={{
+                    <span style={{
                         textDecoration: 'underline',
                         cursor: 'pointer',
                         display: 'block',
                         textAlign: 'center'
                     }}
                         onClick={this.fetchMoreMessages}
-                    >{this.state.loadingText}</a>
+                    >{this.state.loadingText}</span>
                     <ul>
                         {this.generateBubbles(this.props.messages)}
                         <span id="scrollDock"

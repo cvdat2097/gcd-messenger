@@ -3,7 +3,7 @@ import './App.css';
 
 import Messenger from './components/Messenger/Messenger';
 import SidePanel from './components/SidePanel/SidePanel';
-import { MockDB } from './model/mockDB';
+import { MockDB, Users } from './model/mockDB';
 
 import { CONSTANTS } from './environments/constants';
 
@@ -16,6 +16,7 @@ class App extends Component {
     this.state = {
       username: '',
       messages: [],
+      activeUsers: [],
       currentPageIndex: 0
     }
 
@@ -29,8 +30,17 @@ class App extends Component {
     this.handleChangeUsername();
     this.listenToSocket();
     this.setState({
-      messages: this.getMessages() // Get messaging history
+      messages: this.getMessages(), // Get messaging history
+      activeUsers: MockDB.GETActiveUsers()
     });
+
+    // TODO: remove this
+    setInterval(() => {
+      Users.push(Users[Math.round(Math.random())]);
+      MockDB.webSocket.next({
+        action: MockDB.CONSTANTS.NEW_USR
+      });
+    }, 5000);
   }
 
   handleChangeUsername() {
@@ -57,11 +67,22 @@ class App extends Component {
   // Core methods
   listenToSocket() {
     MockDB.webSocket.subscribe((noti) => {
-      if (noti.action === MockDB.CONSTANTS.NEW_MSG) {
-        this.nNewMsg++;
-        this.setState({
-          messages: this.getMessages(), // TODO:  Get NEW messages only
-        });
+      switch (noti.action) {
+        case MockDB.CONSTANTS.NEW_MSG:
+          this.nNewMsg++;
+          this.setState({
+            messages: this.getMessages(), // TODO:  Get NEW messages only
+          });
+          break;
+
+        case MockDB.CONSTANTS.NEW_USR:
+          this.setState({
+            activeUsers: MockDB.GETActiveUsers()
+          });
+          break;
+
+        default:
+          break;
       }
     });
   }
@@ -78,14 +99,13 @@ class App extends Component {
     MockDB.POSTMessage(username, message);
   }
 
-
-
   render() {
     return (
       <div id="frame">
         <SidePanel
           username={this.state.username}
           onChangeUsername={this.handleChangeUsername}
+          activeUsers={this.state.activeUsers}
         />
         <Messenger
           username={this.state.username}

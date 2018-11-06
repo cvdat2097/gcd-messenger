@@ -30,9 +30,11 @@
 
 #frame #sidepanel #contacts ul li.contact {
     position: relative;
-    padding: 10px 0 15px 0;
+    padding: 10px 0 5px 0;
     font-size: 0.9em;
     cursor: pointer;
+    border-bottom: 1px dashed #aaaaaa83;
+    
 }
 
 @media screen and (max-width: 735px) {
@@ -117,7 +119,7 @@
 }
 
 #frame #sidepanel #contacts ul li.contact .wrap .meta .preview {
-    margin: 5px 0 0 0;
+    margin: 20px 0 0 0;
     padding: 0 0 1px;
     font-weight: 400;
     white-space: nowrap;

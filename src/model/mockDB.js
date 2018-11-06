@@ -128,6 +128,7 @@ const Chat = [
 
 const CONSTANTS = {
     NEW_MSG: 'server received a new message!',
+    NEW_USR: 'new user has been online!'
 };
 
 const webSocket = new Subject();
@@ -167,7 +168,7 @@ const MockDB = {
         Chat.push({
             user: Users[userIndex],
             message: {
-                content: (Chat.length + 1).toString() + message,
+                content: (Chat.length + 1).toString() + message, //TODO: remove number prefixing
                 timeStamp: new Date()
             }
         });
@@ -176,6 +177,10 @@ const MockDB = {
             action: CONSTANTS.NEW_MSG
         });
     },
+
+    GETActiveUsers() {
+        return Users;
+    }
 }
 
 export { Chat, Users, MockDB }
