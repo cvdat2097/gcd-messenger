@@ -1,7 +1,7 @@
 import React from 'react';
 import './ActiveUsers.css';
 
-import { users as Users } from '../../../model/mockDB';
+import { Users } from '../../../model/mockDB';
 
 export default class ActiveUsers extends React.Component {
 

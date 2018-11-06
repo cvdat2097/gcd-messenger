@@ -1,13 +1,30 @@
 import React from 'react';
 import './Messenger.css';
-import { Chat } from '../../model/mockDB';
 
 import MsgInput from './MsgInput/MsgInput';
 import MsgBubble from './MsgBubble/MsgBubble';
 
 
 export default class Messenger extends React.Component {
+    scrollDock;
+
+    constructor(props) {
+        super(props);
+
+        this.generateBubbles = this.generateBubbles.bind(this);
+        this.scrollToBottom = this.scrollToBottom.bind(this);
+    }
+
+    scrollToBottom = () => {
+        this.scrollDock.scrollIntoView({ behavior: "smooth" });
+    }
+
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
+
     generateBubbles(messages) {
+        console.log(messages)
         let result = [];
 
         messages.forEach((msg, index) => {
@@ -29,7 +46,11 @@ export default class Messenger extends React.Component {
             <div className="content">
                 <div className="messages">
                     <ul>
-                        {this.generateBubbles(Chat)}
+                        {this.generateBubbles(this.props.messages)}
+                        <span id="scrollDock"
+                            ref={(el) => { this.scrollDock = el; }}
+                            style={{visibility: 'hidden'}}
+                        >dock</span>
                     </ul>
                 </div>
                 <MsgInput

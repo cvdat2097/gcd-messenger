@@ -3,13 +3,15 @@ import './App.css';
 
 import Messenger from './components/Messenger/Messenger';
 import SidePanel from './components/SidePanel/SidePanel';
+import { MockDB } from './model/mockDB';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: ''
+      username: '',
+      messages: []
     }
 
     this.handleChangeUsername = this.handleChangeUsername.bind(this);
@@ -20,6 +22,8 @@ class App extends Component {
   componentWillMount() {
     this.handleChangeUsername();
     this.listenToSocket();
+
+    console.log(MockDB.GETMessages(2, 3));
   }
 
   handleChangeUsername() {
@@ -34,17 +38,25 @@ class App extends Component {
   }
 
   listenToSocket() {
-
+    MockDB.webSocket.subscribe((noti) => {
+      if (noti.action === MockDB.CONSTANTS.NEW_MSG) {
+        this.setState({
+          messages: this.getMessages(),
+        });
+      }
+    });
   }
 
   getMessages() {
     // return messages list
     // GET method
+    return MockDB.GETMessages(0, 100);
   }
 
   sendMessage(username, message) {
     // Send a POST request here
     console.log(`${username}: ${message}`);
+    MockDB.POSTMessage(username, message);
   }
 
 
@@ -59,6 +71,7 @@ class App extends Component {
         <Messenger
           username={this.state.username}
           sendMessage={this.sendMessage}
+          messages={this.state.messages}
         />
       </div>
     );

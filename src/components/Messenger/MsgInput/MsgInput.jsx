@@ -11,6 +11,7 @@ export default class MsgInput extends React.Component {
         }
 
         this.handleOnDataChange = this.handleOnDataChange.bind(this);
+        this.handleOnKeyPress = this.handleOnKeyPress.bind(this);
     }
 
     sendMessage() {
@@ -25,14 +26,20 @@ export default class MsgInput extends React.Component {
             message: e.target.value
         })
     }
+    handleOnKeyPress(e) {
+        if (e.keyCode === 13) {
+            this.sendMessage();
+        }
+    }
 
     render() {
         return (
             <div className="message-input">
                 <div className="wrap">
                     <input type="text" placeholder="Write your message..."
-                    onChange={this.handleOnDataChange}
-                    value={this.state.message}/>
+                        onChange={this.handleOnDataChange}
+                        onKeyDown={this.handleOnKeyPress}
+                        value={this.state.message} />
                     <i className="fa fa-paperclip attachment" aria-hidden="true"></i>
                     <button className="submit"
                         onClick={() => {
