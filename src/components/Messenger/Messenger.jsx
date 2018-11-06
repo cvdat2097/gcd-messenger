@@ -32,7 +32,10 @@ export default class Messenger extends React.Component {
                         {this.generateBubbles(Chat)}
                     </ul>
                 </div>
-                <MsgInput />
+                <MsgInput
+                    sendMessage={this.props.sendMessage}
+                    username={this.props.username}
+                />
             </div>
         );
     }
