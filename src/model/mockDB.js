@@ -130,9 +130,7 @@ const CONSTANTS = {
     NEW_MSG: 'server received a new message!',
 };
 
-const webSocket = new Subject({
-    action: CONSTANTS.NEW_MSG
-});
+const webSocket = new Subject();
 
 const MockDB = {
     CONSTANTS: CONSTANTS,

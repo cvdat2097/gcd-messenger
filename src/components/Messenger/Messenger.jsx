@@ -19,6 +19,10 @@ export default class Messenger extends React.Component {
         this.scrollDock.scrollIntoView({ behavior: "smooth" });
     }
 
+    componentDidMount() {
+        this.scrollToBottom();
+    }
+
     componentDidUpdate() {
         this.scrollToBottom();
     }
@@ -49,8 +53,8 @@ export default class Messenger extends React.Component {
                         {this.generateBubbles(this.props.messages)}
                         <span id="scrollDock"
                             ref={(el) => { this.scrollDock = el; }}
-                            style={{visibility: 'hidden'}}
-                        >dock</span>
+                            style={{ visibility: 'hidden' }}
+                        >docker</span>
                     </ul>
                 </div>
                 <MsgInput

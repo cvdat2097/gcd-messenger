@@ -22,8 +22,9 @@ class App extends Component {
   componentWillMount() {
     this.handleChangeUsername();
     this.listenToSocket();
-
-    console.log(MockDB.GETMessages(2, 3));
+    this.setState({
+      messages: this.getMessages() // Get messaging history
+    });
   }
 
   handleChangeUsername() {
@@ -41,7 +42,7 @@ class App extends Component {
     MockDB.webSocket.subscribe((noti) => {
       if (noti.action === MockDB.CONSTANTS.NEW_MSG) {
         this.setState({
-          messages: this.getMessages(),
+          messages: this.getMessages(), // TODO:  Get NEW messages only
         });
       }
     });
