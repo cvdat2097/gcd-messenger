@@ -5,18 +5,24 @@ import Messenger from './components/Messenger/Messenger';
 import SidePanel from './components/SidePanel/SidePanel';
 import { MockDB } from './model/mockDB';
 
+import { CONSTANTS } from './environments/constants';
+
 class App extends Component {
+  nNewMsg = 0;
+
   constructor(props) {
     super(props);
 
     this.state = {
       username: '',
-      messages: []
+      messages: [],
+      currentPageIndex: 0
     }
 
     this.handleChangeUsername = this.handleChangeUsername.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.getMessages = this.getMessages.bind(this);
+    this.fetchMoreMessages = this.fetchMoreMessages.bind(this);
   }
 
   componentWillMount() {
@@ -38,9 +44,21 @@ class App extends Component {
     })
   }
 
+  fetchMoreMessages(done) {
+    this.nNewMsg += CONSTANTS.N_MESSAGES;
+    setTimeout(() => {
+      this.setState({
+        messages: this.getMessages()
+      });
+      done();// TODO: move done() to async procedure
+    }, 1000);
+  }
+
+  // Core methods
   listenToSocket() {
     MockDB.webSocket.subscribe((noti) => {
       if (noti.action === MockDB.CONSTANTS.NEW_MSG) {
+        this.nNewMsg++;
         this.setState({
           messages: this.getMessages(), // TODO:  Get NEW messages only
         });
@@ -51,7 +69,7 @@ class App extends Component {
   getMessages() {
     // return messages list
     // GET method
-    return MockDB.GETMessages(0, 100);
+    return MockDB.GETMessages(CONSTANTS.N_MESSAGES + this.nNewMsg);
   }
 
   sendMessage(username, message) {
@@ -73,6 +91,7 @@ class App extends Component {
           username={this.state.username}
           sendMessage={this.sendMessage}
           messages={this.state.messages}
+          fetchMoreMessages={this.fetchMoreMessages}
         />
       </div>
     );

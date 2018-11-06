@@ -7,16 +7,40 @@ import MsgBubble from './MsgBubble/MsgBubble';
 
 export default class Messenger extends React.Component {
     scrollDock;
+    scrollLock = false;
 
     constructor(props) {
         super(props);
 
+        this.state = {
+            loadingText: 'More messages',
+        }
+
         this.generateBubbles = this.generateBubbles.bind(this);
         this.scrollToBottom = this.scrollToBottom.bind(this);
+        this.fetchMoreMessages = this.fetchMoreMessages.bind(this);
     }
 
     scrollToBottom = () => {
         this.scrollDock.scrollIntoView({ behavior: "smooth" });
+    }
+
+    fetchMoreMessages() {
+        console.log('Change to loading...')
+        this.scrollLock = true;
+        this.setState({
+            loadingText: 'Loading...',
+        });
+
+        let fetcher = new Promise((resolve, reject) => {
+            this.props.fetchMoreMessages(resolve);
+        }).then(() => {
+            // TODO: Fetch more message
+            this.setState({
+                loadingText: 'More messages',
+            });
+            this.scrollLock = false;
+        });
     }
 
     componentDidMount() {
@@ -24,11 +48,12 @@ export default class Messenger extends React.Component {
     }
 
     componentDidUpdate() {
-        this.scrollToBottom();
+        if (!this.scrollLock) {
+            this.scrollToBottom();
+        }
     }
 
     generateBubbles(messages) {
-        console.log(messages)
         let result = [];
 
         messages.forEach((msg, index) => {
@@ -49,6 +74,14 @@ export default class Messenger extends React.Component {
         return (
             <div className="content">
                 <div className="messages">
+                    <a style={{
+                        textDecoration: 'underline',
+                        cursor: 'pointer',
+                        display: 'block',
+                        textAlign: 'center'
+                    }}
+                        onClick={this.fetchMoreMessages}
+                    >{this.state.loadingText}</a>
                     <ul>
                         {this.generateBubbles(this.props.messages)}
                         <span id="scrollDock"
