@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
+import SockJS from 'sockjs-client';
+import StompClient from 'stompjs';
+import Request from 'request';
 import './App.css';
 
 import Messenger from './components/Messenger/Messenger';
 import SidePanel from './components/SidePanel/SidePanel';
-import { MockDB, Users } from './model/mockDB';
+import { MockDB, Users, Chat } from './model/mockDB';
 
 import { CONSTANTS } from './environments/constants';
 
 class App extends Component {
   nNewMsg = 0;
+  sock = null;
+  stomp = null;
 
   constructor(props) {
     super(props);
@@ -28,11 +33,16 @@ class App extends Component {
 
   componentWillMount() {
     this.handleChangeUsername();
-    this.listenToSocket();
-    this.setState({
-      messages: this.getMessages(), // Get messaging history
-      activeUsers: MockDB.GETActiveUsers()
-    });
+    this.connectToSocket();
+
+    this.getMessages().then(
+      (res) => {
+        console.log('Recieved ======', res);
+        this.setState({
+          messages: JSON.parse(res)
+        });
+      }
+    );
 
     // TODO: remove this
     setInterval(() => {
@@ -51,52 +61,98 @@ class App extends Component {
     console.log(`Current user: ${username}`);
     this.setState({
       username: username
-    })
+    });
   }
 
   fetchMoreMessages(done) {
     this.nNewMsg += CONSTANTS.N_MESSAGES;
-    setTimeout(() => {
-      this.setState({
-        messages: this.getMessages()
-      });
-      done();// TODO: move done() to async procedure
-    }, 1000);
+
+    this.getMessages().then(
+      (res) => {
+        this.setState({
+          messages: JSON.parse(res)
+        });
+
+        done();
+      }
+    )
   }
 
   // Core methods
-  listenToSocket() {
-    MockDB.webSocket.subscribe((noti) => {
-      switch (noti.action) {
-        case MockDB.CONSTANTS.NEW_MSG:
-          this.nNewMsg++;
-          this.setState({
-            messages: this.getMessages(), // TODO:  Get NEW messages only
-          });
-          break;
+  connectToSocket() {
+    this.sock = new SockJS(CONSTANTS.SOCKET_SERVER);
+    console.log('Socket connecting...');
 
-        case MockDB.CONSTANTS.NEW_USR:
-          this.setState({
-            activeUsers: MockDB.GETActiveUsers()
-          });
-          break;
 
-        default:
-          break;
-      }
+    this.stomp = StompClient.over(this.sock);
+    this.stomp.connect({}, (frame) => {
+      console.log('Connected: ' + frame);
+      this.stomp.subscribe(CONSTANTS.ROOM_NAME, function (message) {
+        console.log('Received: ' + message);
+      });
     });
+
+    // this.sock.onmessage = (packet) => {
+    //   const noti = JSON.parse(packet.data);
+
+
+    //   console.log(noti.action);
+    // switch (noti.action) {
+    //   case CONSTANTS.NEW_MSG:
+    //     this.nNewMsg++;
+    //     this.setState({
+    //       messages: this.getMessages(), // TODO:  Get NEW messages only
+    //     });
+    //     break;
+
+    //   case CONSTANTS.NEW_USR:
+    //     this.setState({
+    //       activeUsers: MockDB.GETActiveUsers()
+    //     });
+    //     break;
+
+    //   default:
+    //     break;
+    // }
+    // }
+    // }
   }
 
   getMessages() {
-    // return messages list
-    // GET method
-    return MockDB.GETMessages(CONSTANTS.N_MESSAGES + this.nNewMsg);
+    return new Promise((resolve, reject) => {
+      Request({
+        method: 'GET',
+        uri: CONSTANTS.REST_SERVER,
+      },
+        (err, res) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(res.body);
+          }
+        })
+    })
+    // return MockDB.GETMessages(CONSTANTS.N_MESSAGES + this.nNewMsg);
   }
 
   sendMessage(username, message) {
-    // Send a POST request here
-    console.log(`${username}: ${message}`);
-    MockDB.POSTMessage(username, message);
+    return new Promise((resolve, reject) => {
+      Request({
+        method: 'POST',
+        body: JSON.stringify({
+          username,
+          message
+        }),
+        uri: CONSTANTS.REST_SERVER,
+      },
+        (err, res) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(res.body);
+          }
+        });
+    });
   }
 
   render() {
