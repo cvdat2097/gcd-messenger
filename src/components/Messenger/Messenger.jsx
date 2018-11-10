@@ -62,6 +62,7 @@ export default class Messenger extends React.Component {
                     className={this.props.username === msg.user.username ? "internal" : "external"}
                     user={msg.user}
                     message={msg.message}
+                    timeStamp={msg.timeStamp}
                 />
             );
         });

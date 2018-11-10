@@ -11,7 +11,7 @@ import { MockDB, Users, Chat } from './model/mockDB';
 import { CONSTANTS } from './environments/constants';
 
 class App extends Component {
-  nNewMsg = 0;
+  nNewMsg = CONSTANTS.N_MESSAGES;
   sock = null;
   stomp = null;
 
@@ -35,7 +35,7 @@ class App extends Component {
     this.handleChangeUsername();
     this.connectToSocket();
 
-    this.getMessages().then(
+    this.getMessages(this.nNewMsg).then(
       (res) => {
         console.log('Recieved ======', res);
         this.setState({
@@ -67,7 +67,7 @@ class App extends Component {
   fetchMoreMessages(done) {
     this.nNewMsg += CONSTANTS.N_MESSAGES;
 
-    this.getMessages().then(
+    this.getMessages(this.nNewMsg).then(
       (res) => {
         this.setState({
           messages: JSON.parse(res)
@@ -118,11 +118,14 @@ class App extends Component {
     // }
   }
 
-  getMessages() {
+  getMessages(nMsg) {
     return new Promise((resolve, reject) => {
       Request({
         method: 'GET',
-        uri: CONSTANTS.REST_SERVER,
+        uri: CONSTANTS.REST_SERVER + '/message',
+        qs: {
+          nmsg: nMsg
+        }
       },
         (err, res) => {
           if (err) {
