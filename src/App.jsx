@@ -54,13 +54,14 @@ class App extends Component {
   }
 
   handleChangeUsername() {
-    let username = 'Mikeross';
+    let username = 'cvdat2097';
     // while (!username) {
     //   username = window.prompt('Enter username: ', 'Mikeross')
     // }
     console.log(`Current user: ${username}`);
     this.setState({
-      username: username
+      username: username,
+      avatar: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg'
     });
   }
 
@@ -87,8 +88,23 @@ class App extends Component {
     this.stomp = StompClient.over(this.sock);
     this.stomp.connect({}, (frame) => {
       console.log('Connected: ' + frame);
-      this.stomp.subscribe(CONSTANTS.ROOM_NAME, function (message) {
-        console.log('Received: ' + message);
+      this.stomp.subscribe(CONSTANTS.ROOM_NAME, (noti) => {
+
+        const notification = JSON.parse(noti.body);
+
+        switch (notification.action) {
+          case CONSTANTS.NEW_MSG:
+            this.nNewMsg++;
+            this.getMessages(this.nNewMsg).then(
+              (res) => {
+                this.setState({
+                  messages: JSON.parse(res)
+                });
+              }
+            );
+            break;
+        }
+
       });
     });
 
@@ -138,21 +154,23 @@ class App extends Component {
     // return MockDB.GETMessages(CONSTANTS.N_MESSAGES + this.nNewMsg);
   }
 
-  sendMessage(username, message) {
+  sendMessage(username, content, avatar) {
     return new Promise((resolve, reject) => {
       Request({
         method: 'POST',
         body: JSON.stringify({
           username,
-          message
+          content,
+          avatar
         }),
-        uri: CONSTANTS.REST_SERVER,
+        uri: CONSTANTS.REST_SERVER + '/message',
       },
         (err, res) => {
           if (err) {
             reject(err);
           } else {
             resolve(res.body);
+            this.stomp.send(CONSTANTS.MSG_POINT, {}, CONSTANTS.NEW_MSG);
           }
         });
     });
@@ -168,6 +186,7 @@ class App extends Component {
         />
         <Messenger
           username={this.state.username}
+          avatar={this.state.avatar}
           sendMessage={this.sendMessage}
           messages={this.state.messages}
           fetchMoreMessages={this.fetchMoreMessages}

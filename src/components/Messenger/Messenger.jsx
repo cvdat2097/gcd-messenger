@@ -93,6 +93,7 @@ export default class Messenger extends React.Component {
                 <MsgInput
                     sendMessage={this.props.sendMessage}
                     username={this.props.username}
+                    avatar={this.props.avatar}
                 />
             </div>
         );
