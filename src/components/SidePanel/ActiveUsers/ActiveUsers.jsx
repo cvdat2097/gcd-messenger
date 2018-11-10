@@ -25,7 +25,7 @@ export default class ActiveUsers extends React.Component {
         return (
             <div id="contacts">
                 {/* contact-status online busy away */}
-                <div>{this.props.activeUsers.length}</div>
+                <div className="online-users">Online: {this.props.activeUsers.length}</div>
                 <ul>
                     {this.generateContacts(this.props.activeUsers)}
                 </ul>

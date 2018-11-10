@@ -1,5 +1,5 @@
 export const CONSTANTS = {
-    N_MESSAGES: 3,
+    N_MESSAGES: 5,
     SOCKET_SERVER: "http://localhost:8080/websocket",
     REST_SERVER: "http://localhost:8080/api",
     MSG_POINT: "/messages",

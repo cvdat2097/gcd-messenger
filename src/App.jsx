@@ -6,7 +6,6 @@ import './App.css';
 
 import Messenger from './components/Messenger/Messenger';
 import SidePanel from './components/SidePanel/SidePanel';
-import { MockDB, Users, Chat } from './model/mockDB';
 
 import { CONSTANTS } from './environments/constants';
 
@@ -20,6 +19,7 @@ class App extends Component {
 
     this.state = {
       username: '',
+      avatar: '',
       messages: [],
       activeUsers: [],
       currentPageIndex: 0
@@ -43,25 +43,23 @@ class App extends Component {
         });
       }
     );
-
-    // TODO: remove this
-    setInterval(() => {
-      Users.push(Users[Math.round(Math.random())]);
-      MockDB.webSocket.next({
-        action: MockDB.CONSTANTS.NEW_USR
-      });
-    }, 3000);
   }
 
   handleChangeUsername() {
-    let username = 'cvdat2097';
-    // while (!username) {
-    //   username = window.prompt('Enter username: ', 'Mikeross')
-    // }
+    // let username = 'cvdat2097';
+    // let avatar = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
+    let username = '';
+    let avatar = '';
+    while (!username) {
+      username = window.prompt('Enter username: ', 'cvdat2097')
+    }
+    while (!avatar) {
+      avatar = window.prompt('Enter avatar URL: ', 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg')
+    }
     console.log(`Current user: ${username}`);
     this.setState({
-      username: username,
-      avatar: 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg'
+      username,
+      avatar
     });
   }
 
@@ -87,7 +85,32 @@ class App extends Component {
 
     this.stomp = StompClient.over(this.sock);
     this.stomp.connect({}, (frame) => {
-      console.log('Connected: ' + frame);
+      // Add new user to database
+      Request({
+        method: 'POST',
+        body: JSON.stringify({
+          username: this.state.username,
+          avatar: this.state.avatar
+        }),
+        uri: CONSTANTS.REST_SERVER + '/user',
+      },
+        (err, res) => {
+          if (err) {
+            console.log(err);
+          } else {
+            this.stomp.send(CONSTANTS.MSG_POINT, {}, CONSTANTS.NEW_USR);
+          }
+        }
+      );
+
+      this.getActiveUsers().then(
+        (users) => {
+          this.setState({
+            activeUsers: users
+          })
+        }
+      );
+
       this.stomp.subscribe(CONSTANTS.ROOM_NAME, (noti) => {
 
         const notification = JSON.parse(noti.body);
@@ -103,35 +126,22 @@ class App extends Component {
               }
             );
             break;
-        }
 
+          case CONSTANTS.NEW_USR:
+            this.getActiveUsers().then(
+              (users) => {
+                this.setState({
+                  activeUsers: users
+                });
+              }
+            );
+            break;
+
+          default:
+
+        }
       });
     });
-
-    // this.sock.onmessage = (packet) => {
-    //   const noti = JSON.parse(packet.data);
-
-
-    //   console.log(noti.action);
-    // switch (noti.action) {
-    //   case CONSTANTS.NEW_MSG:
-    //     this.nNewMsg++;
-    //     this.setState({
-    //       messages: this.getMessages(), // TODO:  Get NEW messages only
-    //     });
-    //     break;
-
-    //   case CONSTANTS.NEW_USR:
-    //     this.setState({
-    //       activeUsers: MockDB.GETActiveUsers()
-    //     });
-    //     break;
-
-    //   default:
-    //     break;
-    // }
-    // }
-    // }
   }
 
   getMessages(nMsg) {
@@ -174,6 +184,26 @@ class App extends Component {
           }
         });
     });
+  }
+
+  getActiveUsers() {
+    return new Promise((resolve, reject) => {
+      Request({
+        method: 'GET',
+        uri: CONSTANTS.REST_SERVER + '/user',
+      },
+        (err, res) => {
+          if (err) {
+            reject(err);
+          } else {
+            let users = JSON.parse(res.body);
+            // users = users.filter((user) => {
+            //   return user.username !== this.state.username;
+            // });
+            resolve(users.reverse());
+          }
+        })
+    })
   }
 
   render() {

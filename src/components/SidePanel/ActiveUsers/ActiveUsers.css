@@ -4,6 +4,10 @@
     overflow-x: hidden;
 }
 
+#frame #sidepanel #contacts .online-users {
+    padding: 5px 0 5px 10px;
+}
+
 @media screen and (max-width: 735px) {
     #frame #sidepanel #contacts {
         height: calc(100% - 149px);
@@ -34,7 +38,6 @@
     font-size: 0.9em;
     cursor: pointer;
     border-bottom: 1px dashed #aaaaaa83;
-    
 }
 
 @media screen and (max-width: 735px) {
