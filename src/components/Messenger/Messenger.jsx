@@ -54,6 +54,7 @@ export default class Messenger extends React.Component {
 
     generateBubbles(messages) {
         let result = [];
+        console.log('=========================her', messages);
 
         messages.forEach((msg, index) => {
             result.push(
@@ -62,7 +63,7 @@ export default class Messenger extends React.Component {
                     className={this.props.username === msg.user.username ? "internal" : "external"}
                     user={msg.user}
                     message={msg.message}
-                    timeStamp={msg.timeStamp}
+                    timeStamp={msg.message.timeStamp}
                 />
             );
         });

@@ -46,16 +46,16 @@ class App extends Component {
   }
 
   handleChangeUsername() {
-    // let username = 'cvdat2097';
-    // let avatar = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
-    let username = '';
-    let avatar = '';
-    while (!username) {
-      username = window.prompt('Enter username: ', 'cvdat2097')
-    }
-    while (!avatar) {
-      avatar = window.prompt('Enter avatar URL: ', 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg')
-    }
+    let username = 'cvdat2097';
+    let avatar = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
+    // let username = '';
+    // let avatar = '';
+    // while (!username) {
+    //   username = window.prompt('Enter username: ', 'cvdat2097')
+    // }
+    // while (!avatar) {
+    //   avatar = window.prompt('Enter avatar URL: ', 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg')
+    // }
     console.log(`Current user: ${username}`);
     this.setState({
       username,
@@ -86,22 +86,22 @@ class App extends Component {
     this.stomp = StompClient.over(this.sock);
     this.stomp.connect({}, (frame) => {
       // Add new user to database
-      Request({
-        method: 'POST',
-        body: JSON.stringify({
-          username: this.state.username,
-          avatar: this.state.avatar
-        }),
-        uri: CONSTANTS.REST_SERVER + '/user',
-      },
-        (err, res) => {
-          if (err) {
-            console.log(err);
-          } else {
-            this.stomp.send(CONSTANTS.MSG_POINT, {}, CONSTANTS.NEW_USR);
-          }
-        }
-      );
+      // Request({
+      //   method: 'POST',
+      //   body: JSON.stringify({
+      //     username: this.state.username,
+      //     avatar: this.state.avatar
+      //   }),
+      //   uri: CONSTANTS.REST_SERVER,
+      // },
+      //   (err, res) => {
+      //     if (err) {
+      //       console.log(err);
+      //     } else {
+      //       this.stomp.send(CONSTANTS.MSG_POINT, {}, CONSTANTS.NEW_USR);
+      //     }
+      //   }
+      // );
 
       this.getActiveUsers().then(
         (users) => {
@@ -148,7 +148,7 @@ class App extends Component {
     return new Promise((resolve, reject) => {
       Request({
         method: 'GET',
-        uri: CONSTANTS.REST_SERVER + '/message',
+        uri: CONSTANTS.REST_SERVER,
         qs: {
           nmsg: nMsg
         }
@@ -169,11 +169,16 @@ class App extends Component {
       Request({
         method: 'POST',
         body: JSON.stringify({
-          username,
-          content,
-          avatar
+          user: {
+            username,
+            avatar
+          },
+          message: {
+            content,
+            timeStamp: (new Date()).toString()
+          }
         }),
-        uri: CONSTANTS.REST_SERVER + '/message',
+        uri: CONSTANTS.REST_SERVER,
       },
         (err, res) => {
           if (err) {
