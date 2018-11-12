@@ -47,7 +47,7 @@ class App extends Component {
   }
 
   handleChangeUsername() {
-    let username = 'cvdat2097';
+    let username = 'Tuan';
     let avatar = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
     // let username = '';
     // let avatar = '';
@@ -112,11 +112,9 @@ class App extends Component {
         }
       );
 
-      this.stomp.subscribe(CONSTANTS.ROOM_NAME, (noti) => {
+      this.stomp.subscribe(CONSTANTS.ROOM_NAME, (notification) => {
 
-        const notification = JSON.parse(noti.body);
-
-        switch (notification.action) {
+        switch (notification.body) {
           case CONSTANTS.NEW_MSG:
             this.nNewMsg++;
             this.getMessages(this.nNewMsg).then(
