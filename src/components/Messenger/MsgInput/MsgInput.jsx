@@ -1,14 +1,16 @@
 import React from 'react';
 import './MsgInput.css';
 
+const initialState = {
+    message: ''
+}
+
 export default class MsgInput extends React.Component {
     constructor(props) {
         super(props);
 
 
-        this.state = {
-            message: ''
-        }
+        this.state = initialState;
 
         this.handleOnDataChange = this.handleOnDataChange.bind(this);
         this.handleOnKeyPress = this.handleOnKeyPress.bind(this);

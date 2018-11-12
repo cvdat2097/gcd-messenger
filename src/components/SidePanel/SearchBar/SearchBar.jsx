@@ -1,13 +1,15 @@
 import React from 'react';
 import './SearchBar.css';
 
+const initialState = {
+    keyword: ''
+}
+
 export default class SearchBar extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            keyword: ''
-        }
+        this.state = initialState;
 
         this.handleKeywordChange = this.handleKeywordChange.bind(this);
     }

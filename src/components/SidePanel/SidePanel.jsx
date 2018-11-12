@@ -6,14 +6,20 @@ import SearchBar from './SearchBar/SearchBar';
 import ActiveUsers from './ActiveUsers/ActiveUsers';
 import BottomBar from './BottomBar/BottomBar';
 
+const initialState = {
+    activeUsers: null,
+    keyword: ''
+}
+
 export default class SidePanel extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            activeUsers: props.activeUsers,
-            keyword: ''
-        }
+        this.state = initialState;
+
+        this.setState({
+        
+        })
 
         this.handleKeywordChange = this.handleKeywordChange.bind(this);
     }
@@ -33,6 +39,13 @@ export default class SidePanel extends React.Component {
             })
         }
     }
+
+    componentWillMount() {
+        this.setState({
+            activeUsers: this.props.activeUsers
+        });
+    }
+
     componentWillReceiveProps(newProps) {
         if (newProps.activeUsers.length !== this.state.activeUsers.length) {
             this.handleKeywordChange(this.state.keyword);

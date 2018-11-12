@@ -4,7 +4,9 @@ import './Messenger.css';
 import MsgInput from './MsgInput/MsgInput';
 import MsgBubble from './MsgBubble/MsgBubble';
 
-
+const initialState = {
+    loadingText: 'More messages',
+}
 export default class Messenger extends React.Component {
     scrollDock;
     scrollLock = false;
@@ -12,9 +14,7 @@ export default class Messenger extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            loadingText: 'More messages',
-        }
+        this.state = initialState;
 
         this.generateBubbles = this.generateBubbles.bind(this);
         this.scrollToBottom = this.scrollToBottom.bind(this);

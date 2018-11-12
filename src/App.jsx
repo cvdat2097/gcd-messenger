@@ -10,6 +10,14 @@ import SidePanel from './components/SidePanel/SidePanel';
 
 import { CONSTANTS } from './environments/constants';
 
+const initialState = {
+  username: '',
+  avatar: '',
+  messages: [],
+  activeUsers: [],
+  currentPageIndex: 0
+}
+
 class App extends Component {
   nNewMsg = CONSTANTS.N_MESSAGES;
   sock = null;
@@ -18,13 +26,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      username: '',
-      avatar: '',
-      messages: [],
-      activeUsers: [],
-      currentPageIndex: 0
-    }
+    this.state = initialState;
 
     this.handleChangeUsername = this.handleChangeUsername.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
