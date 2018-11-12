@@ -169,6 +169,9 @@ class App extends Component {
     return new Promise((resolve, reject) => {
       Request({
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           user: {
             username,
