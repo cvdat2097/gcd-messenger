@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SockJS from 'sockjs-client';
 import StompClient from 'stompjs';
 import Request from 'request';
+import Moment from 'moment';
 import './App.css';
 
 import Messenger from './components/Messenger/Messenger';
@@ -175,7 +176,7 @@ class App extends Component {
           },
           message: {
             content,
-            timeStamp: (new Date()).toString()
+            timeStamp: Moment().format(CONSTANTS.DATE_FORMAT).toString()
           }
         }),
         uri: CONSTANTS.REST_SERVER,

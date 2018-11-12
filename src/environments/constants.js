@@ -5,5 +5,6 @@ export const CONSTANTS = {
     MSG_POINT: "/chat.sendMessage",
     ROOM_NAME: "/topic/publicChatRoom",
     NEW_MSG: 'server received a new message!',
-    NEW_USR: 'new user has been online!'
+    NEW_USR: 'new user has been online!',
+    DATE_FORMAT: 'YYYY-MM-DD HH:mm:ss'
 }
