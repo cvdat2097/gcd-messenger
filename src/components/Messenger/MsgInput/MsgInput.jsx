@@ -1,32 +1,31 @@
 import React from 'react';
 import './MsgInput.css';
+import { connect } from 'react-redux';
+import Action from '../../../actions';
 
-const initialState = {
-    message: ''
-}
+const mapStateToProps = (state) => ({
+    message: state.messengerReducer.MsgInput.message
+})
 
-export default class MsgInput extends React.Component {
+const mapDispatchToProps = (dispatch) => ({ changeInputValue: dispatch });
+
+
+class MsgInput extends React.Component {
     constructor(props) {
         super(props);
-
-
-        this.state = initialState;
 
         this.handleOnDataChange = this.handleOnDataChange.bind(this);
         this.handleOnKeyPress = this.handleOnKeyPress.bind(this);
     }
 
     sendMessage() {
-        this.props.sendMessage(this.props.username, this.state.message, this.props.avatar);
-        this.setState({
-            message: ''
-        });
+        this.props.sendMessage(this.props.username, this.props.message, this.props.avatar);
+        this.props.changeInputValue(Action.changeInput(''));
     }
 
     handleOnDataChange(e) {
-        this.setState({
-            message: e.target.value
-        })
+        this.props.changeInputValue(Action.changeInput(e.target.value));
+
     }
     handleOnKeyPress(e) {
         if (e.keyCode === 13) {
@@ -41,7 +40,7 @@ export default class MsgInput extends React.Component {
                     <input type="text" placeholder="Write your message..."
                         onChange={this.handleOnDataChange}
                         onKeyDown={this.handleOnKeyPress}
-                        value={this.state.message} />
+                        value={this.props.message} />
                     <i className="fa fa-paperclip attachment" aria-hidden="true"></i>
                     <button className="submit"
                         onClick={() => {
@@ -53,3 +52,5 @@ export default class MsgInput extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(MsgInput);

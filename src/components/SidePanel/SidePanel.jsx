@@ -17,10 +17,6 @@ export default class SidePanel extends React.Component {
 
         this.state = initialState;
 
-        this.setState({
-        
-        })
-
         this.handleKeywordChange = this.handleKeywordChange.bind(this);
     }
 
