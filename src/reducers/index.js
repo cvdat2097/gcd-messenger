@@ -6,7 +6,7 @@ const initialState = {
         message: ''
     },
     Messenger: {
-        loadingText: '',
+        loadingText: 'More messages',
     }
 }
 

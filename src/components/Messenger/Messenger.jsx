@@ -1,20 +1,26 @@
 import React from 'react';
+import Action from '../../actions';
+import { connect } from 'react-redux';
 import './Messenger.css';
 
 import MsgInput from './MsgInput/MsgInput';
 import MsgBubble from './MsgBubble/MsgBubble';
 
-const initialState = {
-    loadingText: 'More messages',
-}
-export default class Messenger extends React.Component {
+// const initialState = {
+//     loadingText: 'More messages',
+// }
+
+const mapStateToProps = (state) => state.messengerReducer.Messenger;
+const mapDispatchToProps = (dispatch) => ({ changeLoadingText: dispatch });
+
+class Messenger extends React.Component {
     scrollDock;
     scrollLock = false;
 
     constructor(props) {
         super(props);
 
-        this.state = initialState;
+        // this.state = initialState;
 
         this.generateBubbles = this.generateBubbles.bind(this);
         this.scrollToBottom = this.scrollToBottom.bind(this);
@@ -27,17 +33,20 @@ export default class Messenger extends React.Component {
 
     fetchMoreMessages() {
         this.scrollLock = true;
-        this.setState({
-            loadingText: 'Loading...',
-        });
+        // this.setState({
+        //     loadingText: 'Loading...',
+        // });
+        this.props.changeLoadingText(Action.changeLoadingText('Loading...'));
 
         new Promise((resolve, reject) => {
             this.props.fetchMoreMessages(resolve);
         }).then(() => {
             // TODO: Fetch more message
-            this.setState({
-                loadingText: 'More messages',
-            });
+            // this.setState({
+            //     loadingText: 'More messages',
+            // });
+            this.props.changeLoadingText(Action.changeLoadingText('More messages'));
+
             this.scrollLock = false;
         });
     }
@@ -54,7 +63,6 @@ export default class Messenger extends React.Component {
 
     generateBubbles(messages) {
         let result = [];
-        console.log('=========================her', messages);
 
         messages.forEach((msg, index) => {
             result.push(
@@ -82,7 +90,7 @@ export default class Messenger extends React.Component {
                         textAlign: 'center'
                     }}
                         onClick={this.fetchMoreMessages}
-                    >{this.state.loadingText}</span>
+                    >{this.props.loadingText}</span>
                     <ul>
                         {this.generateBubbles(this.props.messages)}
                         <span id="scrollDock"
@@ -100,3 +108,5 @@ export default class Messenger extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Messenger);
