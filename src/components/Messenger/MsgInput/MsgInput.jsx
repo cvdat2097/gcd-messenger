@@ -3,9 +3,7 @@ import './MsgInput.css';
 import { connect } from 'react-redux';
 import Action from '../../../actions';
 
-const mapStateToProps = (state) => ({
-    message: state.messengerReducer.MsgInput.message
-})
+const mapStateToProps = (state) => (state.messengerReducer.MsgInput);
 
 const mapDispatchToProps = (dispatch) => ({ changeInputValue: dispatch });
 

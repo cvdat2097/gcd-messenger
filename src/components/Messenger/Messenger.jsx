@@ -6,9 +6,6 @@ import './Messenger.css';
 import MsgInput from './MsgInput/MsgInput';
 import MsgBubble from './MsgBubble/MsgBubble';
 
-// const initialState = {
-//     loadingText: 'More messages',
-// }
 
 const mapStateToProps = (state) => state.messengerReducer.Messenger;
 const mapDispatchToProps = (dispatch) => ({ changeLoadingText: dispatch });
@@ -20,7 +17,6 @@ class Messenger extends React.Component {
     constructor(props) {
         super(props);
 
-        // this.state = initialState;
 
         this.generateBubbles = this.generateBubbles.bind(this);
         this.scrollToBottom = this.scrollToBottom.bind(this);
@@ -33,18 +29,12 @@ class Messenger extends React.Component {
 
     fetchMoreMessages() {
         this.scrollLock = true;
-        // this.setState({
-        //     loadingText: 'Loading...',
-        // });
         this.props.changeLoadingText(Action.changeLoadingText('Loading...'));
 
         new Promise((resolve, reject) => {
             this.props.fetchMoreMessages(resolve);
         }).then(() => {
             // TODO: Fetch more message
-            // this.setState({
-            //     loadingText: 'More messages',
-            // });
             this.props.changeLoadingText(Action.changeLoadingText('More messages'));
 
             this.scrollLock = false;

@@ -3,26 +3,18 @@ import { connect } from 'react-redux';
 import Action from '../../../actions';
 import './SearchBar.css';
 
-// const initialState = {
-//     keyword: ''
-// }
-
-const mapStateToProps = (state) => ({ keyword: state.sidebarReducer.SearchBar.keyword });
+const mapStateToProps = (state) => (state.sidebarReducer.SearchBar);
 const mapDispathToProps = (dispatch) => ({ changeKeyword: dispatch });
 
 class SearchBar extends React.Component {
     constructor(props) {
         super(props);
 
-        // this.state = initialState;
 
         this.handleKeywordChange = this.handleKeywordChange.bind(this);
     }
 
     handleKeywordChange(e) {
-        // this.setState({
-        //     keyword: e.target.value
-        // });
         this.props.changeKeyword(Action.changeKeyword(e.target.value));
         this.props.onKeywordChange(e.target.value);
     }

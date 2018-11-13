@@ -14,16 +14,12 @@ const messengerReducer = (state = messengerInitialState, action) => {
     switch (action.type) {
         case Action.ACTION_TYPES.CHANGE_INPUT:
             return Object.assign({}, state, {
-                MsgInput: {
-                    message: action.payload.message
-                }
+                MsgInput: action.payload
             });
 
         case Action.ACTION_TYPES.CHANGE_LOADING_TXT:
             return Object.assign({}, state, {
-                Messenger: {
-                    loadingText: action.payload.loadingText
-                }
+                Messenger: action.payload
             });
 
         default:
