@@ -38,7 +38,7 @@ const sidebarInitialState = {
         keyword: ''
     },
     SidePanel: {
-        activeUsers: null,
+        activeUsers: [],
         keyword: ''
     }
 }

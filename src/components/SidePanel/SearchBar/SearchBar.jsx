@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import Action from '../../../actions';
 import './SearchBar.css';
 
-const initialState = {
-    keyword: ''
-}
+// const initialState = {
+//     keyword: ''
+// }
 
 const mapStateToProps = (state) => ({ keyword: state.sidebarReducer.SearchBar.keyword });
 const mapDispathToProps = (dispatch) => ({ changeKeyword: dispatch });
