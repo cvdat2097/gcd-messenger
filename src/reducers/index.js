@@ -1,6 +1,29 @@
 import { combineReducers } from 'redux';
 import Action from '../actions';
 
+// ============ APP REDUCER ==============
+
+const appInitialState = {
+    username: '',
+    avatar: '',
+    messages: [],
+    activeUsers: [],
+    currentPageIndex: 0
+}
+
+const appReducer = (state = appInitialState, action) => {
+    switch (action.type) {
+        case Action.ACTION_TYPES.FETCH_MESSAGES:
+        case Action.ACTION_TYPES.FETCH_ACTIVE_USERS:
+        case Action.ACTION_TYPES.LOGIN:
+            return Object.assign({}, state, action.payload);
+        default:
+            return state;
+    }
+};
+
+// ============ MESSENGER REDUCER ==============
+
 const messengerInitialState = {
     MsgInput: {
         message: ''
@@ -34,8 +57,8 @@ const sidebarInitialState = {
         keyword: ''
     },
     SidePanel: {
-        activeUsers: [],
-        keyword: ''
+        keyword: '',
+        activeUsers: []
     }
 }
 
@@ -54,5 +77,6 @@ const sidebarReducer = (state = sidebarInitialState, action) => {
 
 export default combineReducers({
     messengerReducer,
-    sidebarReducer
+    sidebarReducer,
+    appReducer
 });

@@ -3,6 +3,8 @@ import SockJS from 'sockjs-client';
 import StompClient from 'stompjs';
 import Request from 'request';
 import Moment from 'moment';
+import { connect } from 'react-redux';
+import Action from './actions';
 import './App.css';
 
 import Messenger from './components/Messenger/Messenger';
@@ -18,6 +20,11 @@ const initialState = {
   currentPageIndex: 0
 }
 
+const mapStateToProps = (state) => state.appReducer;
+const mapDispatchToProps = (dispatch) => ({
+  invokeAction: dispatch
+});
+
 class App extends Component {
   nNewMsg = CONSTANTS.N_MESSAGES;
   sock = null;
@@ -26,7 +33,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = initialState;
+    this.props = initialState;
 
     this.handleChangeUsername = this.handleChangeUsername.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -41,29 +48,28 @@ class App extends Component {
     this.getMessages(this.nNewMsg).then(
       (res) => {
         console.log('Recieved ======', res);
-        this.setState({
-          messages: JSON.parse(res)
-        });
+        // this.setState({
+        //   messages: JSON.parse(res) // fetch message
+        // });
+        this.props.invokeAction(Action.fetchMessage(JSON.parse(res)));
       }
     );
   }
 
   handleChangeUsername() {
-    let username = 'Tuan';
-    let avatar = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
-    // let username = '';
-    // let avatar = '';
-    // while (!username) {
-    //   username = window.prompt('Enter username: ', 'cvdat2097')
-    // }
-    // while (!avatar) {
-    //   avatar = window.prompt('Enter avatar URL: ', 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg')
-    // }
+    // let username = 'Tuan';
+    // let avatar = 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg';
+    let username = '';
+    let avatar = '';
+    while (!username) {
+      username = window.prompt('Enter username: ', 'cvdat2097')
+    }
+    while (!avatar) {
+      avatar = window.prompt('Enter avatar URL: ', 'https://cactusthemes.com/blog/wp-content/uploads/2018/01/tt_avatar_small.jpg')
+    }
     console.log(`Current user: ${username}`);
-    this.setState({
-      username,
-      avatar
-    });
+    this.props.invokeAction(Action.login(username, avatar));
+
   }
 
   fetchMoreMessages(done) {
@@ -71,9 +77,7 @@ class App extends Component {
 
     this.getMessages(this.nNewMsg).then(
       (res) => {
-        this.setState({
-          messages: JSON.parse(res)
-        });
+        this.props.invokeAction(Action.fetchMessage(JSON.parse(res)));
 
         done();
       }
@@ -92,8 +96,8 @@ class App extends Component {
       Request({
         method: 'POST',
         body: JSON.stringify({
-          username: this.state.username,
-          avatar: this.state.avatar
+          username: this.props.username,
+          avatar: this.props.avatar
         }),
         uri: CONSTANTS.REST_SERVER_USER,
       },
@@ -108,9 +112,7 @@ class App extends Component {
 
       this.getActiveUsers().then(
         (users) => {
-          this.setState({
-            activeUsers: users
-          })
+          this.props.invokeAction(Action.fetchActiveUsers(users));
         }
       );
 
@@ -121,9 +123,7 @@ class App extends Component {
             this.nNewMsg++;
             this.getMessages(this.nNewMsg).then(
               (res) => {
-                this.setState({
-                  messages: JSON.parse(res)
-                });
+                this.props.invokeAction(Action.fetchMessage(JSON.parse(res)));
               }
             );
             break;
@@ -132,7 +132,7 @@ class App extends Component {
             this.getActiveUsers().then(
               (users) => {
                 this.setState({
-                  activeUsers: users
+                  activeUsers: users // fetch active users
                 });
               }
             );
@@ -207,7 +207,7 @@ class App extends Component {
           } else {
             let users = JSON.parse(res.body);
             // users = users.filter((user) => {
-            //   return user.username !== this.state.username;
+            //   return user.username !== this.props.username;
             // });
             resolve(users.reverse());
           }
@@ -219,15 +219,16 @@ class App extends Component {
     return (
       <div id="frame">
         <SidePanel
-          username={this.state.username}
+          username={this.props.username}
           onChangeUsername={this.handleChangeUsername}
-          activeUsers={this.state.activeUsers}
+          activeUsers={this.props.activeUsers}
+          users={this.props.activeUsers}
         />
         <Messenger
-          username={this.state.username}
-          avatar={this.state.avatar}
+          username={this.props.username}
+          avatar={this.props.avatar}
           sendMessage={this.sendMessage}
-          messages={this.state.messages}
+          messages={this.props.messages}
           fetchMoreMessages={this.fetchMoreMessages}
         />
       </div>
@@ -235,4 +236,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

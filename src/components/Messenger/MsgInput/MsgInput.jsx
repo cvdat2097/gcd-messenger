@@ -17,8 +17,10 @@ class MsgInput extends React.Component {
     }
 
     sendMessage() {
-        this.props.sendMessage(this.props.username, this.props.message, this.props.avatar);
-        this.props.changeInputValue(Action.changeInput(''));
+        if (this.props.message.length) {
+            this.props.sendMessage(this.props.username, this.props.message, this.props.avatar);
+            this.props.changeInputValue(Action.changeInput(''));
+        }
     }
 
     handleOnDataChange(e) {
