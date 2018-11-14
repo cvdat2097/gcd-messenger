@@ -6,7 +6,7 @@ export default class Profile extends React.Component {
         return (
             <div id="profile">
                 <div className="wrap">
-                    <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" className="online" alt="" />
+                    <img id="profile-img" src={this.props.avatar || 'https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png'} className="online" alt="" />
                     <p>{this.props.username}</p>
                     <i className="fa fa-chevron-down expand-button" aria-hidden="true"></i>
                     <div id="status-options">

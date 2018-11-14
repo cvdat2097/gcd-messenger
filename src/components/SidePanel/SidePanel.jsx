@@ -38,7 +38,10 @@ class SidePanel extends React.Component {
     render() {
         return (
             <div id="sidepanel">
-                <Profile username={this.props.username} />
+                <Profile
+                    username={this.props.username}
+                    avatar={this.props.avatar}
+                />
                 <SearchBar
                     onKeywordChange={this.handleKeywordChange}
                 />

@@ -9,32 +9,32 @@ const ACTION_TYPES = {
     LOGIN: 'LOGIN'
 }
 
-const changeLoadingText = (newLoadingText) => ({
+const changeLoadingText = (loadingText) => ({
     type: ACTION_TYPES.CHANGE_LOADING_TXT,
     payload: {
-        loadingText: newLoadingText,
+        loadingText
     }
 })
 
-const changeInput = (newInput) => ({
+const changeInput = (message) => ({
     type: ACTION_TYPES.CHANGE_INPUT,
     payload: {
-        message: newInput
+        message
     }
 });
 
-const changeKeyword = (newKeyword) => ({
+const changeKeyword = (keyword) => ({
     type: ACTION_TYPES.CHANGE_KEYWORD,
     payload: {
-        keyword: newKeyword
+        keyword
     }
 });
 
 const applyFilter = (keyword, activeUsers) => ({
     type: ACTION_TYPES.APPLY_FILTER,
     payload: {
-        activeUsers: activeUsers,
-        keyword: keyword
+        activeUsers,
+        keyword
     }
 });
 
