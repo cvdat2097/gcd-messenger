@@ -89,22 +89,22 @@ class App extends Component {
     this.stomp = StompClient.over(this.sock);
     this.stomp.connect({}, (frame) => {
       // Add new user to database
-      // Request({
-      //   method: 'POST',
-      //   body: JSON.stringify({
-      //     username: this.state.username,
-      //     avatar: this.state.avatar
-      //   }),
-      //   uri: CONSTANTS.REST_SERVER,
-      // },
-      //   (err, res) => {
-      //     if (err) {
-      //       console.log(err);
-      //     } else {
-      //       this.stomp.send(CONSTANTS.MSG_POINT, {}, CONSTANTS.NEW_USR);
-      //     }
-      //   }
-      // );
+      Request({
+        method: 'POST',
+        body: JSON.stringify({
+          username: this.state.username,
+          avatar: this.state.avatar
+        }),
+        uri: CONSTANTS.REST_SERVER_USER,
+      },
+        (err, res) => {
+          if (err) {
+            console.log(err);
+          } else {
+            this.stomp.send(CONSTANTS.MSG_POINT, {}, CONSTANTS.NEW_USR);
+          }
+        }
+      );
 
       this.getActiveUsers().then(
         (users) => {
@@ -149,7 +149,7 @@ class App extends Component {
     return new Promise((resolve, reject) => {
       Request({
         method: 'GET',
-        uri: CONSTANTS.REST_SERVER,
+        uri: CONSTANTS.REST_SERVER_CHAT,
         qs: {
           nmsg: nMsg
         }
@@ -182,7 +182,7 @@ class App extends Component {
             timeStamp: Moment().format(CONSTANTS.DATE_FORMAT).toString()
           }
         }),
-        uri: CONSTANTS.REST_SERVER,
+        uri: CONSTANTS.REST_SERVER_CHAT,
       },
         (err, res) => {
           if (err) {
@@ -199,7 +199,7 @@ class App extends Component {
     return new Promise((resolve, reject) => {
       Request({
         method: 'GET',
-        uri: CONSTANTS.REST_SERVER + '/user',
+        uri: CONSTANTS.REST_SERVER_USER,
       },
         (err, res) => {
           if (err) {
