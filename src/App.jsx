@@ -48,9 +48,6 @@ class App extends Component {
     this.getMessages(this.nNewMsg).then(
       (res) => {
         console.log('Recieved ======', res);
-        // this.setState({
-        //   messages: JSON.parse(res) // fetch message
-        // });
         this.props.invokeAction(Action.fetchMessage(JSON.parse(res)));
       }
     );
@@ -91,6 +88,7 @@ class App extends Component {
 
 
     this.stomp = StompClient.over(this.sock);
+    this.stomp.debug = null; // Disable logging
     this.stomp.connect({}, (frame) => {
       // Add new user to database
       Request({
@@ -131,9 +129,12 @@ class App extends Component {
           case CONSTANTS.NEW_USR:
             this.getActiveUsers().then(
               (users) => {
-                this.setState({
-                  activeUsers: users // fetch active users
-                });
+                // this.setState({
+                //   activeUsers: users // fetch active users
+                // });
+                this.props.invokeAction(Action.fetchActiveUsers(users));
+
+
               }
             );
             break;
