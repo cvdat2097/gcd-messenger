@@ -85,7 +85,11 @@ class Messenger extends React.Component {
                         {this.generateBubbles(this.props.messages)}
                         <span id="scrollDock"
                             ref={(el) => { this.scrollDock = el; }}
-                            style={{ visibility: 'hidden' }}
+                            style={{ 
+                                visibility: 'hidden',
+                                display: 'inline-block',
+                                marginTop: 40
+                            }}
                         >docker</span>
                     </ul>
                 </div>

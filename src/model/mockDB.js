@@ -168,7 +168,7 @@ const MockDB = {
         Chat.push({
             user: Users[userIndex],
             message: {
-                content: (Chat.length + 1).toString() + message, //TODO: remove number prefixing
+                content: (Chat.length + 1).toString() + message,
                 timeStamp: new Date()
             }
         });
