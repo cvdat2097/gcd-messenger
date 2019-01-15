@@ -60,8 +60,8 @@ class Messenger extends React.Component {
                     key={index}
                     className={this.props.username === msg.user.username ? "internal" : "external"}
                     user={msg.user}
-                    message={msg.message}
-                    timeStamp={msg.message.timeStamp}
+                    message={msg}
+                    timeStamp={msg.mstimeStamp}
                 />
             );
         });
